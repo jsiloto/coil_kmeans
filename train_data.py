@@ -6,6 +6,9 @@ from PIL import Image
 import tables
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import normalize
+from random import randint
+from numpy.linalg import norm
+import matplotlib.pyplot as plt
 
 
 
@@ -68,14 +71,35 @@ for filename in list_of_filenames:
     feat = get_features(kmeans, imgvec)
     list_of_features += [feat]
 
-print list_of_features
-
 
 # Rank images
-# Chose a single image in feature space(A)
+# Chose a single image in feature space
+img_index = randint(0, len(list_of_filenames))
+original = Image.open('./coil-100/' + list_of_filenames[img_index])
+
 # Calculate the euclidean distance from every image in feature space from A
+
+img_feature = list_of_features[img_index]
+list_of_distances = [norm(img_feature - feat) for feat in list_of_features]
+print list_of_distances
+
 # Sort all distances
+sort_indexes = sorted(range(len(list_of_distances)), key=lambda k: list_of_distances[k])
+
+
+
 # Choose 10 smaller distances
 # Plot images
+num_images = 6
 
+plt.figure(1)
+plt.subplot(201 + + num_images*10)
+plt.imshow(original)
+
+for i in range(0, num_images):
+    img = Image.open('./coil-100/' + list_of_filenames[sort_indexes[i]])
+    plt.subplot(202 + num_images*10 + i)
+    plt.imshow(img)
+
+plt.show()
 
