@@ -5,6 +5,20 @@ import os
 from PIL import Image
 import tables
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import normalize
+
+
+
+def get_features(kmeans, imagevec):
+    a  = kmeans.predict(imagevec)
+    unique, counts = np.unique(a.tolist(), return_counts=True)
+    counts = normalize(counts.reshape(1, -1))
+    vals = dict(zip(unique.tolist(), counts[0].tolist()))
+    b = np.zeros(centroids.shape[0])
+    for index, intensity in vals.iteritems():
+        b[index] = intensity
+    return b
+
 
 # Build the training dataset
 # 1 - Load all images
@@ -44,9 +58,18 @@ centroids = kmeans.cluster_centers_
 print(centroids)
 
 
+# 6/7 - Load all images separately and  Convert each image to the feature space
+list_of_features = []
+for filename in list_of_filenames:
+    img = Image.open('./coil-100/' + filename)
+    imgvec = np.asarray(img)
+    imgvec = imgvec.reshape(imgvec.shape[0] * imgvec.shape[1], imgvec.shape[2])
+    img.close()
+    feat = get_features(kmeans, imgvec)
+    list_of_features += [feat]
 
-# 6 - Load all images separately
-# 7 - Convert each image to the feature space
+print list_of_features
+
 
 # Rank images
 # Chose a single image in feature space(A)
