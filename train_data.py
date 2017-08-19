@@ -1,4 +1,5 @@
 ## Initialisation
+from Tkinter import Image
 
 import numpy as np
 import os
@@ -90,15 +91,13 @@ sort_indexes = sorted(range(len(list_of_distances)), key=lambda k: list_of_dista
 
 # Choose 10 smaller distances
 # Plot images
-num_images = 6
+
+original.show()
 
 plt.figure(1)
-plt.subplot(201 + + num_images*10)
-plt.imshow(original)
-
-for i in range(0, num_images):
+for i in range(0, 8):
     img = Image.open('./coil-100/' + list_of_filenames[sort_indexes[i]])
-    plt.subplot(202 + num_images*10 + i)
+    plt.subplot(241 + i)
     plt.imshow(img)
 
 plt.show()
